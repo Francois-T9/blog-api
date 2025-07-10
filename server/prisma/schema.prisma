@@ -28,7 +28,8 @@ model User {
 model Post {
   id      Int      @id @default(autoincrement())
   title   String   @unique
-  createdAt DateTime
+  createdAt DateTime @default(now())
+
   author   User @relation(fields: [authorId], references: [id])
   authorId Int // relation scalar field  (used in the `@relation` attribute above)
   comments Comment[]
@@ -37,7 +38,8 @@ model Post {
 model Comment {
   id      Int      @id @default(autoincrement())
   content   String   
-  createdAt DateTime
+  createdAt DateTime @default(now())
+
   author   User @relation(fields: [authorId], references: [id])
   authorId Int // relation scalar field  (used in the `@relation` attribute above
   post   Post @relation(fields: [postId], references: [id])
