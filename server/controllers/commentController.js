@@ -1,28 +1,68 @@
+const { PrismaClient } = require("../generated/prisma");
+const prisma = new PrismaClient();
+
 // GET all comments
-exports.all_comments_list = (req, res) => {
-  res.send("NOT IMPLEMENTED: comment list");
+exports.all_comments_list = async (req, res) => {
+  try {
+    const comments = await prisma.comment.findMany();
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching comments" });
+  }
 };
 
 // GET specific comment
-exports.comment_list = (req, res) => {
+exports.comment_list = async (req, res) => {
   const { id } = req.params;
-  res.send(`get comment with id ${id}`);
+  try {
+    const comment = await prisma.comment.findUnique({
+      where: { id: parseInt(id, 10) },
+    });
+    if (!comment) return res.status(404).json({ error: "comment not found" });
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching comment" });
+  }
 };
 
 // POST comment
-exports.comment_create = (req, res) => {
-  res.send("NOT IMPLEMENTED: Create comment");
-  res.json(req.body);
+exports.comment_create = async (req, res) => {
+  const { content, authorId, postId } = req.body;
+  try {
+    const newComment = await prisma.comment.create({
+      data: { content, authorId, postId },
+    });
+    res.status(201).json(newComment);
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    res.status(500).json({ error: "Error creating comment" });
+  }
 };
 
 //  PUT (update) comment
 
-exports.comment_update = (req, res) => {
+exports.comment_update = async (req, res) => {
   const { id } = req.params;
-  res.json(req.body);
+  const { content, createdAt, authorId, postId } = req.body;
+  try {
+    const updatedComment = await prisma.comment.update({
+      where: { id: parseInt(id, 10) },
+      data: { content, createdAt, authorId, postId },
+    });
+    res.json(updatedComment);
+  } catch (error) {
+    res.status(500).json({ error: "Error updating comment" });
+  }
 };
 // DELETE comment
-exports.comment_delete = (req, res) => {
+exports.comment_delete = async (req, res) => {
   const { id } = req.params;
-  res.json({ deleted: id });
+  try {
+    const deletedComment = await prisma.comment.delete({
+      where: { id: parseInt(id, 10) },
+    });
+    res.json(deletedComment);
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting comment" });
+  }
 };
