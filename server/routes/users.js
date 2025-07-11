@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const loginController = require("../controllers/loginController");
 
 // get all blog posts
-router.get("/", userController.all_users_list);
+router.get(
+  "/",
+
+  userController.all_users_list
+);
 // create new post
 
 router.post("/", userController.user_create);

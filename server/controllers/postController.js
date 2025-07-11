@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 exports.all_post_list = async (req, res) => {
   try {
     const posts = await prisma.post.findMany();
-    res.json({ message: "Access granted!", user: req.user });
+    res.json({ user: req.user, posts: posts });
   } catch (error) {
     res.status(500).json({ error: "Error fetching posts" });
   }
