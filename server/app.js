@@ -14,10 +14,10 @@ const passportConfig = require("./config/passport");
 app.use(bodyParser.json());
 app.use(passport.initialize());
 passportConfig(passport);
-app.use("/api/posts", postsRoute);
-app.use("/api/comments", commentsRoute);
-app.use("/api/users", usersRoute);
 app.use("/api/login", loginRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/users/:userId/posts", postsRoute);
+app.use("/api/users/:userId/posts/:postId/comments", commentsRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`Port ${process.env.PORT}`);
