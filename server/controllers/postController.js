@@ -4,8 +4,15 @@ const prisma = new PrismaClient();
 // GET all posts
 exports.all_post_list = async (req, res) => {
   try {
+    const { userId } = req.params;
+    console.log(userId);
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId, 10) },
+    });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
     const posts = await prisma.post.findMany();
-    res.json({ user: req.user, posts: posts });
+    res.json({ posts: posts });
   } catch (error) {
     res.status(500).json({ error: "Error fetching posts" });
   }
@@ -27,10 +34,12 @@ exports.post_list = async (req, res) => {
 
 // POST comment
 exports.post_create = async (req, res) => {
-  const { title, authorId } = req.body;
+  const { userId } = req.params;
+  console.log(userId);
+  const { title } = req.body;
   try {
     const newPost = await prisma.post.create({
-      data: { title, authorId },
+      data: { title, authorId: parseInt(userId, 10) },
     });
     res.status(201).json(newPost);
   } catch (error) {
@@ -58,11 +67,19 @@ exports.post_update = async (req, res) => {
 exports.post_delete = async (req, res) => {
   const { id } = req.params;
   try {
+    // Delete all comments for this post first
+    await prisma.comment.deleteMany({
+      where: { postId: parseInt(id, 10) },
+    });
+    // Now delete the post
     const deletedPost = await prisma.post.delete({
       where: { id: parseInt(id, 10) },
     });
     res.json(deletedPost);
   } catch (error) {
-    res.status(500).json({ error: "Error deleting post" });
+    console.error("Error deleting post:", error);
+    res
+      .status(500)
+      .json({ error: "Error deleting post", details: error.message });
   }
 };
