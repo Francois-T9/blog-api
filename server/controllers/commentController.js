@@ -1,10 +1,14 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
-// GET all comments
+// GET all comments from post with postId
 exports.all_comments_list = async (req, res) => {
   try {
-    const comments = await prisma.comment.findMany();
+    const { userId, postId } = req.params;
+    console.log(userId, postId);
+    const comments = await prisma.comment.findMany({
+      where: { postId: parseInt(postId, 10) },
+    });
     res.json(comments);
   } catch (error) {
     res.status(500).json({ error: "Error fetching comments" });
@@ -27,10 +31,16 @@ exports.comment_list = async (req, res) => {
 
 // POST comment
 exports.comment_create = async (req, res) => {
-  const { content, authorId, postId } = req.body;
+  const { userId, postId } = req.params;
+  const { content } = req.body;
+
   try {
     const newComment = await prisma.comment.create({
-      data: { content, authorId, postId },
+      data: {
+        content,
+        authorId: parseInt(userId, 10),
+        postId: parseInt(postId, 10),
+      },
     });
     res.status(201).json(newComment);
   } catch (error) {
