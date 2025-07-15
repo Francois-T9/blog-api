@@ -1,18 +1,35 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const commentController = require("../controllers/commentController");
 const loginController = require("../controllers/loginController");
-
+const passport = require("passport");
 router.get(
   "/",
+  passport.authenticate("jwt", { session: false }),
 
   commentController.all_comments_list
 );
-router.post("/", commentController.comment_create);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  commentController.comment_create
+);
 
-router.get("/:id", commentController.comment_list);
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  commentController.comment_list
+);
 
-router.put("/:id", commentController.comment_update);
-router.delete("/:id", commentController.comment_delete);
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  commentController.comment_update
+);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  commentController.comment_delete
+);
 
 module.exports = router;

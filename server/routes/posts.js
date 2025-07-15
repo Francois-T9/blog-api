@@ -1,5 +1,6 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
+
 const postController = require("../controllers/postController");
 const loginController = require("../controllers/loginController");
 const passport = require("passport");
@@ -13,15 +14,31 @@ router.get(
 );
 // create new post
 
-router.post("/", postController.post_create);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  postController.post_create
+);
 
 // get specific post
-router.get("/:id", postController.post_list);
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  postController.post_list
+);
 // update post
 
-router.put("/:id", postController.post_update);
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  postController.post_update
+);
 
 // delete post
-router.delete("/:id", postController.post_delete);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  postController.post_delete
+);
 
 module.exports = router;

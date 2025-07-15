@@ -1,11 +1,12 @@
 const express = require("express");
-const router = express.Router();
-const userController = require("../controllers/userController");
-const loginController = require("../controllers/loginController");
+const router = express.Router({ mergeParams: true });
 
+const userController = require("../controllers/userController");
+const passport = require("passport");
 // get all blog posts
 router.get(
   "/",
+  passport.authenticate("jwt", { session: false }),
 
   userController.all_users_list
 );
