@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./Components/Home";
 import SignupForm from "./Components/SignupForm";
 import LoginForm from "./Components/LoginForm";
+import { UserProvider } from "./Context/userContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,7 +20,11 @@ function App() {
       element: <LoginForm />,
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <UserProvider>
+      <RouterProvider router={router} />;
+    </UserProvider>
+  );
 }
 
 export default App;
