@@ -2,6 +2,13 @@ const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { body, validationResult } = require("express-validator");
+// validate login
+
+const validateLogin = [
+  body("username").notEmpty().withMessage("Username is required"),
+  body("password").notEmpty().withMessage("Password is required"),
+];
 
 exports.user_login = async (req, res) => {
   const { username, password } = req.body;
@@ -22,7 +29,7 @@ exports.user_login = async (req, res) => {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-  res.json({ token });
+  res.json({ token, userId: user.id });
 };
 
 // Authentification function
