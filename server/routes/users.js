@@ -12,7 +12,7 @@ router.get(
 );
 // create new post
 
-router.post("/", userController.user_create);
+router.post("/", userController.validateUser, userController.user_create);
 
 // get specific post
 router.get("/:id", userController.user_list);
