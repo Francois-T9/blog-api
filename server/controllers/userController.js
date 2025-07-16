@@ -1,7 +1,49 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
+const { body, validationResult } = require("express-validator");
+// user form validation
+const validateUser = [
+  body("email")
+    .isEmail()
+    .withMessage("Invalid email format")
+    .custom(async (value) => {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: value },
+      });
+      if (existingUser) {
+        throw new Error("Email is already in use");
+      }
+      return true;
+    }),
+  body("name")
+    .notEmpty()
+    .withMessage("Name is required")
+    .isLength({ min: 3 })
+    .withMessage("Name must be at least 3 characters long"),
+  body("username")
+    .notEmpty()
+    .withMessage("Username is required")
+    .isLength({ min: 3 })
+    .withMessage("Username must be at least 3 characters long")
+    .custom(async (value) => {
+      const existingUser = await prisma.user.findUnique({
+        where: { username: value },
+      });
+      if (existingUser) {
+        throw new Error("Username is already in use");
+      }
+      return true;
+    }),
 
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+];
+
+exports.validateUser = validateUser;
 // GET all users
 exports.all_users_list = async (req, res) => {
   try {
@@ -28,9 +70,16 @@ exports.user_list = async (req, res) => {
 
 // POST users
 exports.user_create = async (req, res) => {
+  const errors = validationResult(req);
+  // console.log(errors);
+  if (!errors.isEmpty()) {
+    // Send the full array of validation errors to the client
+    console.log(errors.array()[0].msg);
+    return res.status(400).json({ errors: errors.array()[0].msg });
+  }
   const { email, name, username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: { email, name, username, password: hashedPassword },
     });
