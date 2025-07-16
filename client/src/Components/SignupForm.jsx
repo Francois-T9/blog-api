@@ -21,7 +21,7 @@ export default function SignupForm() {
       body: JSON.stringify({ email, name, username, password }),
     });
 
-    console.log(response.status);
+    console.log(await response.json());
     if (response.status !== 201) {
       console.log(response.statusText);
     } else {
