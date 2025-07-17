@@ -2,21 +2,18 @@ const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
-// validate login
-
-const validateLogin = [
-  body("username").notEmpty().withMessage("Username is required"),
-  body("password").notEmpty().withMessage("Password is required"),
-];
 
 exports.user_login = async (req, res) => {
   const { username, password } = req.body;
+
+  // query user from client request
   const user = await prisma.user.findUnique({
     where: { username },
   });
-  if (!user) return res.status(401).json({ message: "User not found" });
 
+  // check if username exists
+  if (!user) return res.status(401).json({ message: "User not found" });
+  // check if password is valid
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(401).json({ message: "Invalid credentials" });
 
@@ -25,11 +22,25 @@ exports.user_login = async (req, res) => {
     username: user.username,
   };
 
-  const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+  // generate access token
+
+  const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-  res.json({ token, userId: user.id });
+  // generate refresh token
+
+  const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_EXPIRES_IN,
+  });
+
+  // store tokens in localStorage
+  localStorage.setItem(accessToken);
+  localStorage.setItem(refreshToken);
+
+  // return responses with user info
+
+  res.json({ userId: user.id });
 };
 
 // Authentification function
