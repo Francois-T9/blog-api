@@ -1,9 +1,10 @@
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
-import { useUser } from "../Context/userContext.jsx";
+import { useAuth } from "../Context/authContext.jsx";
 
 export default function Home() {
-  const { user } = useUser();
+  const { user } = useAuth();
+
   return (
     <div className=" w-full h-full  flex flex-col ">
       <Header />
