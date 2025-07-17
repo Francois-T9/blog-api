@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./Components/Home";
 import SignupForm from "./Components/SignupForm";
 import LoginForm from "./Components/LoginForm";
-import { UserProvider } from "./Context/userContext";
+import { AuthProvider } from "./Context/authContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,11 +19,15 @@ function App() {
       path: "/login",
       element: <LoginForm />,
     },
+    {
+      path: "/logout",
+      element: <Home />,
+    },
   ]);
   return (
-    <UserProvider>
+    <AuthProvider>
       <RouterProvider router={router} />;
-    </UserProvider>
+    </AuthProvider>
   );
 }
 
