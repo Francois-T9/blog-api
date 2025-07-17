@@ -21,6 +21,7 @@ model User {
   name    String?
   username   String   @unique
   password   String   
+  refreshToken  String?
   posts     Post[]
   comments  Comment[]
 }
