@@ -1,38 +1,34 @@
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/authContext.jsx";
+
+import { useNavigate } from "react-router-dom";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  // const navigate = useNavigate;
-
   const [username, setUsername] = useState("");
-
   const [password, setPassword] = useState("");
 
+  const { signupError, signup } = useAuth();
+  const navigate = useNavigate();
+
   const handleSignup = async (e) => {
-    e.preventDefault();
-
-    const response = await fetch("http://localhost:3000/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, name, username, password }),
-    });
-
-    console.log(await response.json());
-    if (response.status !== 201) {
-      console.log(response.statusText);
-    } else {
-      // navigate("/");
-    }
+    const success = await signup(e, { email, name, username, password });
+    if (success) navigate("/");
   };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <div className="flex flex-col grow">
-        <form className="p-3 flex flex-col grow " action="/" method="post">
+        <form
+          onSubmit={handleSignup}
+          className="p-3 flex flex-col grow "
+          action="/"
+          method="post"
+        >
           <label htmlFor="email">Email</label>
           <input
             className="border border-gray-400 rounded px-2 py-1"
@@ -65,9 +61,12 @@ export default function SignupForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit" onClick={handleSignup}>
-            Sign up
-          </button>
+          {signupError ? (
+            <p className="text-red-500">{signupError.errors}</p>
+          ) : (
+            ""
+          )}
+          <button type="submit">Sign up</button>
         </form>
       </div>
       <Footer />
