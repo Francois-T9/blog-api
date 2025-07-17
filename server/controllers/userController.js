@@ -74,7 +74,6 @@ exports.user_create = async (req, res) => {
   // console.log(errors);
   if (!errors.isEmpty()) {
     // Send the full array of validation errors to the client
-    console.log(errors.array()[0].msg);
     return res.status(400).json({ errors: errors.array()[0].msg });
   }
   const { email, name, username, password } = req.body;
