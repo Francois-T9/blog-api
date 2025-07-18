@@ -4,6 +4,7 @@ import Home from "./Components/Home";
 import SignupForm from "./Components/SignupForm";
 import LoginForm from "./Components/LoginForm";
 import { AuthProvider } from "./Context/authContext";
+import { UserProvider } from "./Context/userContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -26,7 +27,9 @@ function App() {
   ]);
   return (
     <AuthProvider>
-      <RouterProvider router={router} />;
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </AuthProvider>
   );
 }
