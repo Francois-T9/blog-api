@@ -50,21 +50,31 @@ exports.login = async (req, res) => {
 // ############ Register function #################""
 
 exports.signup = async (req, res) => {
-  console.log(validationResult);
   const errors = validationResult(req);
-  console.log(errors);
   if (!errors.isEmpty()) {
-    // Send the full array of validation errors to the client
     return res.status(400).json({ errors: errors.array()[0].msg });
   }
+
   const { email, name, username, password } = req.body;
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    const isAdmin = username === process.env.ADMIN_USERNAME;
+    console.log(isAdmin);
     const newUser = await prisma.user.create({
-      data: { email, name, username, password: hashedPassword },
+      data: {
+        email,
+        name,
+        username,
+        password: hashedPassword,
+        isAdmin: isAdmin,
+      },
     });
+
     res.status(201).json(newUser);
   } catch (error) {
+    console.error(error); // Add this for debugging
     res.status(500).json({ error: "Error creating user" });
   }
 };
