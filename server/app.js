@@ -1,9 +1,7 @@
 const express = require("express");
 
-const path = require("path");
 const bodyParser = require("body-parser");
 const app = express();
-const assetsPath = path.join(__dirname, "public");
 const commentsRoute = require("./routes/comments");
 const postsRoute = require("./routes/posts");
 const usersRoute = require("./routes/users");
