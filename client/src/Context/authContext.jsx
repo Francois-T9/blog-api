@@ -69,7 +69,7 @@ export function AuthProvider({ children }) {
   const signup = async (e, { email, name, username, password }) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:3000/api/users", {
+    const response = await fetch("http://localhost:3000/api/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, name, username, password }),
