@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 
 const postController = require("../controllers/postController");
-const loginController = require("../controllers/loginController");
 const passport = require("passport");
 // get all blog posts
 router.get(
