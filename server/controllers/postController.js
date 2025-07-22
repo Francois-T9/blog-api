@@ -1,16 +1,10 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
+const { validationResult } = require("express-validator");
 
 // GET all posts
 exports.all_post_list = async (req, res) => {
   try {
-    const { userId } = req.params;
-    console.log(userId);
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(userId, 10) },
-    });
-    if (!user) return res.status(404).json({ error: "User not found" });
-
     const posts = await prisma.post.findMany();
     res.json({ posts: posts });
   } catch (error) {
@@ -34,9 +28,12 @@ exports.post_list = async (req, res) => {
 
 // POST comment
 exports.post_create = async (req, res) => {
-  const { userId } = req.params;
-  console.log(userId);
-  const { title } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array()[0].msg });
+  }
+
+  const { userId, title } = req.body;
   try {
     const newPost = await prisma.post.create({
       data: { title, authorId: parseInt(userId, 10) },
