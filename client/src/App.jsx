@@ -5,7 +5,9 @@ import SignupForm from "./Components/SignupForm";
 import LoginForm from "./Components/LoginForm";
 import { AuthProvider } from "./Context/authContext";
 import { UserProvider } from "./Context/userContext";
-
+import { PostsProvider } from "./Context/postsContext";
+import { CommentsProvider } from "./Context/commentsContext";
+import Post from "./Components/Post";
 function App() {
   const router = createBrowserRouter([
     {
@@ -24,11 +26,19 @@ function App() {
       path: "/logout",
       element: <Home />,
     },
+    {
+      path: "/posts/id",
+      element: <Post />,
+    },
   ]);
   return (
     <AuthProvider>
       <UserProvider>
-        <RouterProvider router={router} />
+        <PostsProvider>
+          <CommentsProvider>
+            <RouterProvider router={router} />
+          </CommentsProvider>
+        </PostsProvider>
       </UserProvider>
     </AuthProvider>
   );
