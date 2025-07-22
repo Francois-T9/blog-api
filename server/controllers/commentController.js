@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 exports.all_comments_list = async (req, res) => {
   try {
     const { userId, postId } = req.params;
-    console.log(userId, postId);
     const comments = await prisma.comment.findMany({
       where: { postId: parseInt(postId, 10) },
     });

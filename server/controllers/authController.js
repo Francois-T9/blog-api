@@ -61,7 +61,6 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const isAdmin = username === process.env.ADMIN_USERNAME;
-    console.log(isAdmin);
     const newUser = await prisma.user.create({
       data: {
         email,
