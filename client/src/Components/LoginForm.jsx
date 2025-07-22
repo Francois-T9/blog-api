@@ -3,6 +3,8 @@ import Footer from "./Footer.jsx";
 import { useState } from "react";
 import { useAuth } from "../Context/authContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,10 +21,10 @@ export default function LoginForm() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="flex flex-col grow">
+      <div className="p-3 flex flex-col grow gap-2">
         <form
           onSubmit={handleSubmit}
-          className="p-3 flex flex-col grow "
+          className=" flex flex-col  gap-1.5 "
           action="/"
           method="post"
         >
@@ -43,8 +45,18 @@ export default function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {loginError ? <p className="text-red-500">{loginError}</p> : ""}
-          <button type="submit">Log in</button>
+          <button
+            className="border cursor-pointer hover:bg-blue-200 p-1 rounded"
+            type="submit"
+          >
+            Log in
+          </button>
         </form>
+        <NavLink to="/">
+          <button className="hover:bg-gray-300 border p-1 cursor-pointer">
+            Go back home
+          </button>
+        </NavLink>
       </div>
       <Footer />
     </div>
