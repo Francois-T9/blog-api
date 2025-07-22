@@ -16,7 +16,7 @@ app.use(passport.initialize());
 passportConfig(passport);
 app.use("/api/", authRoute);
 app.use("/api/users", usersRoute);
-app.use("/api/users/:userId/posts", postsRoute);
+app.use("/api/posts", postsRoute);
 app.use("/api/users/:userId/posts/:postId/comments", commentsRoute);
 
 app.listen(process.env.PORT, () => {
