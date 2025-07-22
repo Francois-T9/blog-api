@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
+const { validatePost } = require("../middlewares/validation.middleware");
 
 const postController = require("../controllers/postController");
 const passport = require("passport");
@@ -15,6 +16,7 @@ router.get(
 
 router.post(
   "/",
+  validatePost,
   passport.authenticate("jwt", { session: false }),
   postController.post_create
 );
