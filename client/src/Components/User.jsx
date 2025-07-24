@@ -3,8 +3,8 @@ import { useUser } from "../Context/userContext.jsx";
 import { usePosts } from "../Context/postsContext.jsx";
 
 import { useEffect } from "react";
-import Posts from "./Posts.jsx";
-import PostForm from "./PostForm.jsx";
+import Posts from "./Posts/Posts.jsx";
+import PostForm from "./Forms/PostForm.jsx";
 
 function User() {
   const { user } = useAuth();
