@@ -1,23 +1,19 @@
 // import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { usePosts } from "../Context/postsContext";
-import { useAuth } from "../Context/authContext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useComments } from "../../Context/commentsContext.jsx";
+import { useAuth } from "../../Context/authContext.jsx";
 
-function PostForm() {
+function CommentForm({ id }) {
   const { user } = useAuth();
-  const navigate = useNavigate();
 
-  const { createPost, postError } = usePosts();
-  const [title, setTitle] = useState("");
+  const { createComment, commentError } = useComments();
+  const [content, setContent] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await createPost(title, user.id);
+    const success = await createComment(content, user.id, id);
     if (success) {
-      navigate("/");
-      setTitle("");
-    } else {
-      setTitle(title);
+      //   navigate("/");
+      setContent("");
     }
   };
 
@@ -32,22 +28,24 @@ function PostForm() {
         <input
           className="border  rounded px-2 py-1"
           type="text"
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Whats on your mind ?"
+          name="content"
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+          placeholder="Write a comment for this post..."
         />
 
-        {postError ? <p className="text-red-500">{postError}</p> : ""}
+        {commentError ? <p className="text-red-500">{commentError}</p> : ""}
         <button
           className="border cursor-pointer hover:bg-blue-200 p-1 rounded"
           type="submit"
         >
-          Post
+          Comment
         </button>
       </form>
     </div>
   );
 }
 
-export default PostForm;
+export default CommentForm;

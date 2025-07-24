@@ -1,7 +1,7 @@
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
+import Header from "../Header.jsx";
+import Footer from "../Footer.jsx";
 import { useState } from "react";
-import { useAuth } from "../Context/authContext.jsx";
+import { useAuth } from "../../Context/authContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
