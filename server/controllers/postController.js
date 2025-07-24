@@ -40,7 +40,6 @@ exports.post_create = async (req, res) => {
     });
     res.status(201).json(newPost);
   } catch (error) {
-    console.error("Error creating post:", error);
     res.status(500).json({ error: "Error creating post" });
   }
 };

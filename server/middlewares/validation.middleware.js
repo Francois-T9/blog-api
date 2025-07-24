@@ -50,4 +50,12 @@ const validatePost = [
     .withMessage("Title must be at least 3 characters long"),
 ];
 
-module.exports = { validateUser, validatePost };
+const validateComment = [
+  body("content")
+    .notEmpty()
+    .withMessage("A comment is required")
+    .isLength({ min: 3 })
+    .withMessage("Comment must be at least 3 characters long"),
+];
+
+module.exports = { validateUser, validatePost, validateComment };

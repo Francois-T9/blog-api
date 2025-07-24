@@ -1,10 +1,12 @@
 const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
+const { validationResult } = require("express-validator");
 
 // GET all comments from post with postId
 exports.all_comments_list = async (req, res) => {
   try {
-    const { userId, postId } = req.params;
+    const { postId } = req.params;
+
     const comments = await prisma.comment.findMany({
       where: { postId: parseInt(postId, 10) },
     });
@@ -30,8 +32,12 @@ exports.comment_list = async (req, res) => {
 
 // POST comment
 exports.comment_create = async (req, res) => {
-  const { userId, postId } = req.params;
-  const { content } = req.body;
+  const { postId } = req.params;
+  const { userId, content } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array()[0].msg });
+  }
 
   try {
     const newComment = await prisma.comment.create({
