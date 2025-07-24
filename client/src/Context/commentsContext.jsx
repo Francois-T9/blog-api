@@ -3,10 +3,11 @@ import { createContext, useContext, useState } from "react";
 const CommentsContext = createContext();
 
 export function CommentsProvider({ children }) {
-  const [allComments, setAllComments] = useState([]);
-  const getAllComments = async (authorId, postId) => {
+  const [comments, setComments] = useState([]);
+  const [commentError, setCommentError] = useState("");
+  const getPostComments = async (postId) => {
     const response = await fetch(
-      `http://localhost:3000/api/users/${authorId}/posts/${postId}/comments`,
+      `http://localhost:3000/api/posts/${postId}/comments`,
       {
         method: "GET",
         headers: {
@@ -15,11 +16,60 @@ export function CommentsProvider({ children }) {
       }
     );
     const data = await response.json();
-    console.log(data);
-    setAllComments(data.content);
+    setComments(data);
+    return data;
   };
 
-  const value = { getAllComments, allComments };
+  const createComment = async (content, authorId, postId) => {
+    const response = await fetch(
+      `http://localhost:3000/api/posts/${postId}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({ userId: authorId, content }),
+      }
+    );
+    const data = await response.json();
+    if (response.status !== 201) {
+      setCommentError(data.errors);
+      return false;
+    } else {
+      setComments((prevComments) => [...prevComments, data]);
+      setCommentError("");
+      return true;
+    }
+  };
+  const deleteComment = async (postId, commentId) => {
+    const response = await fetch(
+      `http://localhost:3000/api/posts/${postId}/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
+    if (response.status !== 201) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const value = {
+    getPostComments,
+    createComment,
+    comments,
+    commentError,
+    deleteComment,
+  };
 
   return (
     <CommentsContext.Provider value={value}>
