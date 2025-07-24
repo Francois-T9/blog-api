@@ -1,13 +1,13 @@
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./Components/Home";
-import SignupForm from "./Components/SignupForm";
-import LoginForm from "./Components/LoginForm";
+import SignupForm from "./Components/Forms/SignupForm";
+import LoginForm from "./Components/Forms/LoginForm";
 import { AuthProvider } from "./Context/authContext";
 import { UserProvider } from "./Context/userContext";
 import { PostsProvider } from "./Context/postsContext";
 import { CommentsProvider } from "./Context/commentsContext";
-import Post from "./Components/Post";
+import PostPage from "./Components/Posts/PostPage";
 function App() {
   const router = createBrowserRouter([
     {
@@ -27,8 +27,8 @@ function App() {
       element: <Home />,
     },
     {
-      path: "/posts/id",
-      element: <Post />,
+      path: "/post/:id",
+      element: <PostPage />,
     },
   ]);
   return (
