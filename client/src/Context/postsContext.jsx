@@ -75,6 +75,7 @@ export function PostsProvider({ children }) {
     deletePost,
     getPostById,
     postError,
+    getAllPosts,
   };
 
   return (

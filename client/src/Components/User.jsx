@@ -1,16 +1,24 @@
 import { useAuth } from "../Context/authContext.jsx";
 import { useUser } from "../Context/userContext.jsx";
 import { usePosts } from "../Context/postsContext.jsx";
-
-import { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import SignupForm from "./Forms/SignupForm.jsx";
+import LoginForm from "./Forms/LoginForm.jsx";
+import { useEffect, useState } from "react";
 import Posts from "./Posts/Posts.jsx";
 import PostForm from "./Forms/PostForm.jsx";
+import imageTwo from "../assets/pexels-tony-schnagl-5586301.jpg";
 
 function User() {
   const { user } = useAuth();
   const { getAllUsers, allUsers, deleteUserbyId } = useUser();
   const { getAllPosts } = usePosts();
+  const [toggleSignupForm, setToggleSignupForm] = useState(false);
+  const [toggleLoginForm, setToggleLoginForm] = useState(false);
 
+  const displaySignupForm = () => {
+    setToggleSignupForm(!toggleSignupForm);
+  };
   useEffect(() => {
     getAllUsers();
   }, []);
@@ -19,6 +27,7 @@ function User() {
       getAllPosts(user.id);
     }
   }, []);
+
   return (
     <div className="home-main p-3 flex grow">
       {user ? (
@@ -59,7 +68,53 @@ function User() {
           <Posts user={user} />
         </div>
       ) : (
-        <p>Login to begin watching posts!</p>
+        <div className="w-full">
+          <h1 className="font-bold text-3xl col-span-2 ">
+            In this blog you can create posts and interact with others
+          </h1>
+          <div className="wrap flex">
+            <div className="left w-[50%]">
+              <p className="">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sunt
+                magnam, consequatur enim veniam recusandae, molestias sequi
+                voluptas nostrum provident soluta tempora reiciendis
+                exercitationem inventore iste harum ipsam dolorem hic cupiditate
+                maiores! Vitae ratione alias quibusdam atque quaerat, explicabo
+                nihil provident quas ipsum facere in optio animi repellat,
+                debitis impedit id accusamus aliquam? Sapiente, possimus
+                suscipit quisquam iste temporibus a tempora expedita assumenda
+                porro quaerat doloremque molestiae nisi asperiores voluptatibus
+                facere, ullam quo eligendi dolorum adipisci. Repellendus esse
+                expedita tempora necessitatibus tenetur, perspiciatis distinctio
+                repudiandae dolore, exercitationem eveniet quod, sequi ipsum!
+                Facilis autem odio neque iure sapiente. Aut dolores rerum
+                voluptatem!
+              </p>
+              <img className=" rounded" src={imageTwo} alt="" />
+            </div>
+            <div className="right w-[50%] flex flex-col items-center justify-center gap-8">
+              <button
+                onClick={() => setToggleLoginForm(!toggleLoginForm)}
+                className="border w-[50%] rounded-2xl  cursor-pointer p-2 bg-gray-500 hover:bg-gray-300"
+              >
+                Login
+              </button>
+
+              <button
+                onClick={displaySignupForm}
+                className="border w-[50%] cursor-pointer rounded-2xl p-2 bg-gray-500 hover:bg-gray-300"
+              >
+                Signup
+              </button>
+              {toggleSignupForm ? (
+                <SignupForm isVisible onClose={setToggleSignupForm} />
+              ) : null}
+              {toggleLoginForm ? (
+                <LoginForm isVisible onClose={setToggleLoginForm} />
+              ) : null}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

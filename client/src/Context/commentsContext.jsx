@@ -16,7 +16,7 @@ export function CommentsProvider({ children }) {
       }
     );
     const data = await response.json();
-    setComments(data);
+    // setComments(data);
     return data;
   };
 
@@ -44,7 +44,7 @@ export function CommentsProvider({ children }) {
   };
   const deleteComment = async (postId, commentId) => {
     const response = await fetch(
-      `http://localhost:3000/api/posts/${postId}/${commentId}`,
+      `http://localhost:3000/api/posts/${postId}/comments/${commentId}`,
       {
         method: "DELETE",
         headers: {
@@ -53,12 +53,12 @@ export function CommentsProvider({ children }) {
         },
       }
     );
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment.id !== commentId)
-    );
-    if (response.status !== 201) {
+    if (response.status !== 200) {
       return false;
     } else {
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
       return true;
     }
   };
@@ -67,6 +67,7 @@ export function CommentsProvider({ children }) {
     getPostComments,
     createComment,
     comments,
+    setComments,
     commentError,
     deleteComment,
   };

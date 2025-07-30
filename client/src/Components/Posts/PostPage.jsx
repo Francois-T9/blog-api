@@ -3,7 +3,7 @@ import { usePosts } from "../../Context/postsContext";
 import { useEffect, useState } from "react";
 import { useUser } from "../../Context/userContext.jsx";
 import { useComments } from "../../Context/commentsContext.jsx";
-import likeImage from "../../assets/thumb-up.svg";
+// import likeImage from "../../assets/thumb-up.svg";
 import commentImage from "../../assets/comment.svg";
 import { NavLink } from "react-router-dom";
 import Comments from "../Comments.jsx";
@@ -14,10 +14,11 @@ function PostPage() {
   const [post, setPost] = useState({});
   const [toggleCommentForm, setToggleCommentForm] = useState(false);
   const { allUsers } = useUser();
-  const { comments, getPostComments } = useComments();
+  const { comments, setComments, getPostComments } = useComments();
 
   const { getPostById } = usePosts();
   const { id } = useParams();
+
   const fetchPost = async (id) => {
     const data = await getPostById(id);
     setPost(data);
@@ -25,8 +26,12 @@ function PostPage() {
 
   useEffect(() => {
     fetchPost(id);
-    getPostComments(id);
-  }, []);
+    const fetchComments = async () => {
+      const data = await getPostComments(id);
+      setComments(data); // <-- updates context state
+    };
+    fetchComments();
+  }, [id]); // add id as dependency just in case
 
   const userIdToUsername = {};
   allUsers.forEach((user) => {
@@ -47,7 +52,7 @@ function PostPage() {
             <li>{new Date(post.createdAt).toLocaleString()}</li>
             <li>@{userIdToUsername[post.authorId] || "Unknown"}</li>
             <div className="interactions flex justify-end gap-5">
-              <img className="w-7 cursor-pointer" src={likeImage} alt="" />
+              {/* <img className="w-7 cursor-pointer" src={likeImage} alt="" /> */}
               <img
                 onClick={toggleForm}
                 className="w-7 cursor-pointer"

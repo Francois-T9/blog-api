@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import { usePosts } from "../../Context/postsContext.jsx";
 import PostPreview from "./PostPreview.jsx";
 export default function Posts({ user }) {
-  const { allPosts } = usePosts();
+  const { getAllPosts, allPosts } = usePosts();
+
+  useEffect(() => {
+    getAllPosts();
+  });
 
   return (
     <div className="postsPanel bg-gray-300 p-2 rounded-2xl border ">

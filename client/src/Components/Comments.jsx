@@ -4,13 +4,19 @@ import { useComments } from "../Context/commentsContext.jsx";
 function Comments({ comment }) {
   const { allUsers } = useUser();
   const { user } = useAuth();
-  console.log(user);
   const { deleteComment } = useComments();
 
   const userIdToUsername = {};
   allUsers.forEach((user) => {
     userIdToUsername[user.id] = user.username;
   });
+
+  const handleDelete = async (postId, commentId) => {
+    const success = await deleteComment(postId, commentId);
+    if (success) {
+      //   navigate("/");
+    }
+  };
 
   return (
     <div className="comment bg-amber-100 p-2 border rounded">
@@ -21,10 +27,10 @@ function Comments({ comment }) {
       </ul>
       {user.isAdmin ? (
         <button
-          onClick={() => deleteComment(comment.postId, comment.id)}
+          onClick={() => handleDelete(comment.postId, comment.id)}
           className="bg-red-500 border p-1 cursor-pointer "
         >
-          Delete post
+          Delete comment
         </button>
       ) : (
         <p></p>

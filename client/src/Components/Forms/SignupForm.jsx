@@ -1,13 +1,9 @@
-import Header from "../Header.jsx";
-import Footer from "../Footer.jsx";
 import { useState } from "react";
 import { useAuth } from "../../Context/authContext.jsx";
 
-import { NavLink } from "react-router-dom";
-
 import { useNavigate } from "react-router-dom";
 
-export default function SignupForm() {
+export default function SignupForm({ isVisible, onClose }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -21,10 +17,20 @@ export default function SignupForm() {
     if (success) navigate("/");
   };
 
+  if (!isVisible) return null;
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="p-3 flex flex-col grow gap-2">
+    <div
+      className="fixed inset-0 flex justify-center items-center 
+    backdrop-blur-sm bg-black/30 z-50"
+    >
+      <div className="p-3 flex flex-col  gap-2  bg-gray-50 rounded-xl">
+        <button
+          onClick={() => onClose()}
+          className="p-2 rounded self-end cursor-pointer hover:bg-gray-400"
+        >
+          X
+        </button>
         <form
           onSubmit={handleSignup}
           className=" flex flex-col gap-1.5  "
@@ -75,13 +81,7 @@ export default function SignupForm() {
             Sign up
           </button>
         </form>
-        <NavLink to="/">
-          <button className="hover:bg-gray-300 border p-1 cursor-pointer">
-            Go back home
-          </button>
-        </NavLink>
       </div>
-      <Footer />
     </div>
   );
 }

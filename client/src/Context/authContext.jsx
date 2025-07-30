@@ -58,7 +58,6 @@ export function AuthProvider({ children }) {
       },
     });
     if (response.status == 200) {
-      console.log("Logged out successfully");
       localStorage.setItem("accessToken", "null");
       localStorage.setItem("refreshToken", "null");
       setUser(null);

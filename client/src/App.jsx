@@ -1,8 +1,6 @@
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./Components/Home";
-import SignupForm from "./Components/Forms/SignupForm";
-import LoginForm from "./Components/Forms/LoginForm";
 import { AuthProvider } from "./Context/authContext";
 import { UserProvider } from "./Context/userContext";
 import { PostsProvider } from "./Context/postsContext";
@@ -14,14 +12,7 @@ function App() {
       path: "/",
       element: <Home />,
     },
-    {
-      path: "/signup",
-      element: <SignupForm />,
-    },
-    {
-      path: "/login",
-      element: <LoginForm />,
-    },
+
     {
       path: "/logout",
       element: <Home />,
